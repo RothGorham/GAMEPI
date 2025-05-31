@@ -1,0 +1,133 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 95%;
+
+    --card: 240 2% 11%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 240 2% 11%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 84 100% 37%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 2% 11%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 240 2% 11%;
+    --muted-foreground: 240 5% 75%;
+
+    --accent: 84 100% 37%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 95%;
+
+    --border: 240 2% 18%;
+    --input: 240 2% 18%;
+    --ring: 84 100% 37%;
+
+    --radius: 0.25rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-monster-black text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+.game-container {
+  @apply bg-monster-gradient min-h-screen;
+}
+
+.game-card {
+  @apply bg-monster-gray/90 backdrop-blur-sm border-l-4 border-l-monster-green border-t-0 border-r-0 border-b-0 rounded-none shadow-xl;
+}
+
+.game-button-primary {
+  @apply bg-monster-green text-white font-bold py-2 px-4 
+  transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-monster-green/20 hover:scale-105;
+}
+
+.game-button-secondary {
+  @apply bg-monster-darkgray text-white font-bold py-2 px-4 
+  transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-monster-green/20 hover:scale-105 border-l-4 border-l-monster-green;
+}
+
+.game-button-accent {
+  @apply bg-monster-green text-white font-bold py-2 px-4 
+  transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-monster-green/20 hover:scale-105;
+}
+
+.luxury-card {
+  @apply border-l-4 border-l-monster-green bg-monster-gray/90 backdrop-blur-md rounded-none shadow-2xl;
+}
+
+.monster-card {
+  @apply border-l-4 border-l-monster-green bg-monster-gray/90 backdrop-blur-md rounded-none shadow-2xl;
+}
+
+.glass-effect {
+  @apply backdrop-blur-lg bg-monster-darkgray/90 border-l-4 border-l-monster-green;
+}
+
+.text-shadow {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.monster-text {
+  @apply text-monster-green font-bold uppercase tracking-wider;
+}
+
+.monster-title {
+  @apply text-white font-black uppercase tracking-widest text-shadow;
+}
+
+.monster-glow {
+  text-shadow: 0 0 10px rgba(132, 189, 0, 0.5);
+}
+
+.monster-border {
+  @apply border-l-4 border-l-monster-green;
+}
+
+.monster-gradient {
+  @apply bg-gradient-to-r from-monster-green to-monster-green/70 bg-clip-text text-transparent;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.glow {
+  box-shadow: 0 0 15px rgba(132, 189, 0, 0.3);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(132, 189, 0, 0.5);
+}
+
+.monster-nav-item {
+  @apply py-2 px-4 uppercase font-bold tracking-wider text-white hover:text-monster-green transition-colors duration-200;
+}
+
+.monster-nav-item.active {
+  @apply text-monster-green border-l-4 border-l-monster-green;
+}
