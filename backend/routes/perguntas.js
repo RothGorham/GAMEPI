@@ -12,18 +12,21 @@ const Pergunta = perguntasDB.model('Pergunta', perguntaSchema, 'GAME');
 // @desc    Adicionar uma nova pergunta
 // @access  Privado (Professor)
 router.post("/", authMiddleware, async (req, res) => {
-    const { pergunta, correta } = req.body;
+    const { pergunta, correta, nivel, materia } = req.body;
 
     if (!pergunta || !correta) {
         return res.status(400).json({ msg: "Por favor, forneça a pergunta e a resposta correta." });
     }
 
     try {
-        console.log("Tentando salvar pergunta:", { pergunta, correta });
+        console.log("Tentando salvar pergunta:", { pergunta, correta, nivel, materia });
         
         const novaPergunta = new Pergunta({
             pergunta,
-            correta
+            correta,
+            nivel: nivel || 'medio',
+            materia: materia || 'misto',
+            modo: 'normal' // Define explicitamente como modo normal
         });
 
         const perguntaSalva = await novaPergunta.save();

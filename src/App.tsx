@@ -6,12 +6,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, createContext, useEffect } from "react";
 import { authService } from "./lib/api";
+import { verificarSaudeServidor, iniciarVerificacaoSaude } from "./lib/healthCheck";
 
 import PaginaIntro from "./components/PaginaIntro";
 import PaginaLogin from "./components/PaginaLogin";
 import Materias from "./components/Materias";
 import Ranking from "./components/Ranking";
 import Usuarios from "./components/Usuarios";
+// Removidas importações de PerguntasWeb e PerguntasWeb2
+// Removida importação de PerguntasSite que estava bugado
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -34,15 +37,27 @@ const App = () => {
   // Verificar autenticação ao iniciar o aplicativo
   useEffect(() => {
     const verificarAutenticacao = async () => {
-      const tokenValido = await authService.verificarToken();
-      if (tokenValido) {
-        setIsAuthenticated(true);
-        // Aqui poderíamos buscar informações do usuário se necessário
-        setUser({ email: "professor@exemplo.com" }); // Valor temporário
+      // Verificar a saúde do servidor primeiro
+      const servidorOnline = await verificarSaudeServidor();
+      
+      if (servidorOnline) {
+        const tokenValido = await authService.verificarToken();
+        if (tokenValido) {
+          setIsAuthenticated(true);
+          // Aqui poderíamos buscar informações do usuário se necessário
+          const email = localStorage.getItem('userEmail') || 'professor@exemplo.com';
+          setUser({ email });
+        }
       }
     };
     
     verificarAutenticacao();
+    
+    // Iniciar verificação periódica a cada 30 segundos
+    const pararVerificacao = iniciarVerificacaoSaude(30000);
+    
+    // Limpar o intervalo quando o componente for desmontado
+    return () => pararVerificacao();
   }, []);
   
   // Função para fazer logout
@@ -66,6 +81,8 @@ const App = () => {
                 <Route path="materias" element={<ProtectedRoute><Materias /></ProtectedRoute>} />
                 <Route path="ranking" element={<ProtectedRoute><Ranking /></ProtectedRoute>} />
                 <Route path="usuarios" element={<ProtectedRoute><Usuarios /></ProtectedRoute>} />
+                {/* Removida rota para PerguntasSite que estava bugada */}
+                {/* Removidas rotas de PerguntasWeb e PerguntasWeb2 */}
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

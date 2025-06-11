@@ -41,11 +41,15 @@
   * {
     @apply border-border;
   }
+}
 
-  body {
-    @apply bg-monster-black text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+body {
+  @apply bg-monster-black text-foreground;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  background: linear-gradient(to bottom, #000000, #1b1c20);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 .game-container {
@@ -125,9 +129,19 @@
 }
 
 .monster-nav-item {
-  @apply py-2 px-4 uppercase font-bold tracking-wider text-white hover:text-monster-green transition-colors duration-200;
+  @apply px-4 py-3 text-sm font-medium text-muted-foreground hover:text-white hover:bg-monster-green/10 transition-colors w-full;
 }
 
 .monster-nav-item.active {
-  @apply text-monster-green border-l-4 border-l-monster-green;
+  @apply bg-monster-green/10 text-white border-l-4 border-l-monster-green;
+}
+
+@media (max-width: 768px) {
+  .monster-nav-item {
+    @apply text-center py-4;
+  }
+  
+  .monster-nav-item span {
+    @apply text-base;
+  }
 }

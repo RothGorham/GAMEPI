@@ -16,7 +16,7 @@ app.use(cors({
 app.use(express.json());
 
 // URI do MongoDB Atlas com a estrutura correta - usando banco GAME inicialmente para outras coleções
-const ATLAS_URI = "mongodb+srv://24950092:W7e3HGBYuh1X5jps@game.c3vnt2d.mongodb.net/GAME?retryWrites=true&w=majority&appName=GAME";
+const ATLAS_URI = process.env.MONGO_URI || "mongodb+srv://24950092:W7e3HGBYuh1X5jps@game.c3vnt2d.mongodb.net/GAME?retryWrites=true&w=majority&appName=GAME";
 console.log("Tentando conectar ao MongoDB Atlas...");
 
 mongoose.connect(ATLAS_URI)
@@ -43,6 +43,8 @@ mongoose.connection.on('reconnected', () => {
 // Definir Rotas
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/perguntas", require("./routes/perguntas"));
+app.use("/api/perguntasweb", require("./routes/perguntasWeb"));
+app.use("/api/perguntassite", require("./routes/perguntasWeb")); // Adicionando rota para perguntassite
 app.use("/api/alunos", require("./routes/alunos"));
 app.use("/api/ranking", require("./routes/ranking"));
 
@@ -61,7 +63,7 @@ app.get("/", (req, res) => {
     res.json({ message: "Servidor backend funcionando!" });
 });
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5001; // Usar a variável de ambiente PORT ou 5001 como fallback
 
 app.listen(PORT, () => console.log(`Servidor backend a correr na porta ${PORT}`));
 
@@ -100,6 +102,31 @@ mongoose.connection.once('open', async () => {
                 console.log("✓ Coleção 'usuarios' encontrada no banco PROFESSORES");
             } else {
                 console.warn("⚠ Coleção 'usuarios' NÃO encontrada no banco PROFESSORES");
+            }
+        });
+        
+        // Testar conexão com o banco de dados PERGUNTAS
+        const perguntasDB = mongoose.connection.useDb('PERGUNTAS');
+        console.log("Conectado ao banco de dados PERGUNTAS");
+        
+        // Listar coleções no banco PERGUNTAS
+        perguntasDB.db.listCollections().toArray((err, collections) => {
+            if (err) {
+                console.error("Erro ao listar coleções de PERGUNTAS:", err);
+                return;
+            }
+            
+            console.log("Coleções em PERGUNTAS:");
+            collections.forEach(coll => {
+                console.log(`- ${coll.name}`);
+            });
+            
+            // Verificar se a coleção gameweb existe
+            const gamewebCollection = collections.find(c => c.name === 'gameweb');
+            if (gamewebCollection) {
+                console.log("✓ Coleção 'gameweb' encontrada no banco PERGUNTAS");
+            } else {
+                console.warn("⚠ Coleção 'gameweb' NÃO encontrada no banco PERGUNTAS");
             }
         });
     } catch (error) {

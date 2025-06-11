@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import { motion } from "framer-motion";
@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Trophy } from "lucide-react";
 import { authService } from "@/lib/api";
+import { verificarSaudeServidor } from "@/lib/healthCheck";
 
 const PaginaLogin = () => {
   const [email, setEmail] = useState("");
@@ -18,11 +18,24 @@ const PaginaLogin = () => {
   const navigate = useNavigate();
   const { setIsAuthenticated, setUser } = useContext(AuthContext);
   
+  // Verificar a saúde do servidor ao carregar o componente
+  useEffect(() => {
+    verificarSaudeServidor();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
+      // Verificar se o servidor está online antes de tentar fazer login
+      const servidorOnline = await verificarSaudeServidor();
+      if (!servidorOnline) {
+        toast.error("Não foi possível conectar ao servidor. Verifique se o backend está em execução.");
+        setIsLoading(false);
+        return;
+      }
+      
       // Autenticar com o backend
       await authService.login(email, password);
       
@@ -36,7 +49,15 @@ const PaginaLogin = () => {
       toast.success("Login realizado com sucesso!");
       navigate("/professor/materias");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Erro ao fazer login");
+      if (error instanceof Error) {
+        if (error.message.includes('fetch') || error.message.includes('network') || error.message.includes('servidor')) {
+          toast.error("Erro de conexão com o servidor. Verifique se o backend está em execução.");
+        } else {
+          toast.error(error.message || "Erro ao fazer login");
+        }
+      } else {
+        toast.error("Erro desconhecido ao fazer login");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +76,11 @@ const PaginaLogin = () => {
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <Trophy className="w-6 h-6 text-gold mr-2" />
+                <img 
+                  src="https://poliedro-api.p4ed.com/sso/auth/resources/vv3tb/login/updated-poliedro/dist/static/media/logo-sistema-p+.eb1179607d4dc652db31b1f92b5df4b5.svg" 
+                  alt="Logo Poliedro" 
+                  className="w-6 h-6 mr-2" 
+                />
                 <CardTitle className="text-2xl font-bold gold-gradient">Área do Professor</CardTitle>
               </div>
               <Button 

@@ -3,6 +3,37 @@
 // Obter a URL da API do ambiente ou usar o padrão localhost
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
+// Função para verificar se o servidor está online
+const verificarServidorOnline = async () => {
+  try {
+    const response = await fetch(`${API_URL.split('/api')[0]}/health`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      // Adicionar timeout para não esperar indefinidamente
+      signal: AbortSignal.timeout(5000)
+    });
+    return response.ok;
+  } catch (error) {
+    console.error('Erro ao verificar servidor:', error);
+    return false;
+  }
+};
+
+// Função melhorada para fazer requisições com retry
+const fetchWithRetry = async (url, options, retries = 2) => {
+  try {
+    const response = await fetch(url, options);
+    return response;
+  } catch (error) {
+    if (retries > 0) {
+      // Esperar 1 segundo antes de tentar novamente
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return fetchWithRetry(url, options, retries - 1);
+    }
+    throw error;
+  }
+};
+
 // Função para obter o token JWT do localStorage
 const getToken = () => localStorage.getItem('token');
 
@@ -20,7 +51,13 @@ export const authService = {
   // Login do professor
   login: async (email: string, senha: string) => {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      // Verificar se o servidor está online antes de fazer a requisição
+      const serverOnline = await verificarServidorOnline();
+      if (!serverOnline) {
+        throw new Error('Servidor não está respondendo. Verifique se o backend está em execução.');
+      }
+      
+      const response = await fetchWithRetry(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, senha })
@@ -159,7 +196,7 @@ export const perguntasService = {
   },
   
   // Adicionar uma nova pergunta
-  adicionarPergunta: async (pergunta: { pergunta: string, correta: string }) => {
+  adicionarPergunta: async (pergunta: { pergunta: string, correta: string, nivel?: string, materia?: string }) => {
     try {
       const response = await fetch(`${API_URL}/perguntas`, {
         method: 'POST',

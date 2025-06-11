@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Trophy, Medal, Award, Search, User, DollarSign, PlayCircle } from "lucide-react";
 import { rankingService } from "@/lib/api";
@@ -57,6 +58,8 @@ const calcularPerda = (estatisticas: AlunoEstatistica): number => {
   return gastos;
 };
 
+const ITEMS_PER_PAGE = 10;
+
 const Ranking = () => {
   // Buscar dados do ranking do backend
   const { data: rankingData = [], isLoading, isError } = useQuery({
@@ -69,6 +72,7 @@ const Ranking = () => {
   const [selectedAluno, setSelectedAluno] = useState<AlunoItem | null>(null);
   const [activeTab, setActiveTab] = useState("ranking-global");
   const [selectedJogada, setSelectedJogada] = useState<AlunoEstatistica | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const tabsRef = useRef<HTMLDivElement>(null);
 
   // Processar e ordenar os dados do ranking
@@ -113,6 +117,30 @@ const Ranking = () => {
       ...item,
       position: index + 1,
     }));
+
+  // Calcular o total de páginas
+  const totalPages = Math.ceil(filteredRanking.length / ITEMS_PER_PAGE);
+
+  // Obter os alunos da página atual
+  const getCurrentPageItems = () => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredRanking.slice(startIndex, endIndex);
+  };
+
+  // Gerar array de números de página para paginação
+  const getPageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
+  // Mudar de página
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   // Prepare data for individual student performance chart if student is selected
   const prepareIndividualChartData = (aluno: AlunoItem) => {
@@ -229,6 +257,78 @@ const Ranking = () => {
                       ))}
                     </TableBody>
                   </Table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Lista Completa de Alunos */}
+            <Card className="game-card mt-6">
+              <CardHeader>
+                <CardTitle>Lista Completa de Alunos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="rounded-md border overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-[80px] text-center">Posição</TableHead>
+                        <TableHead>Nome</TableHead>
+                        <TableHead className="text-right">Saldo</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {getCurrentPageItems().map((aluno, index) => (
+                        <TableRow 
+                          key={aluno._id} 
+                          className={`cursor-pointer ${selectedAluno?._id === aluno._id ? 'bg-gray-800' : ''}`}
+                          onClick={() => handleSelectAluno(aluno)}
+                        >
+                          <TableCell className="text-center">
+                            {aluno.position === 1 && <Trophy className="h-5 w-5 text-gold mx-auto" />}
+                            {aluno.position === 2 && <Medal className="h-5 w-5 text-silver mx-auto" />}
+                            {aluno.position === 3 && <Award className="h-5 w-5 text-bronze mx-auto" />}
+                            {aluno.position > 3 && aluno.position}
+                          </TableCell>
+                          <TableCell className="font-medium">{aluno.nome}</TableCell>
+                          <TableCell className="text-right font-medium text-monster-green">
+                            {formatCurrency(aluno.estatisticasRecentes.saldo)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                
+                {/* Paginação */}
+                <div className="mt-4">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious 
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                        />
+                      </PaginationItem>
+                      
+                      {getPageNumbers().map((page) => (
+                        <PaginationItem key={page}>
+                          <PaginationLink 
+                            onClick={() => handlePageChange(page)}
+                            isActive={currentPage === page}
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))}
+                      
+                      <PaginationItem>
+                        <PaginationNext 
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
                 </div>
               </CardContent>
             </Card>

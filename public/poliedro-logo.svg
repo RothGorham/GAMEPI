@@ -1,0 +1,10 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Círculo externo -->
+  <circle cx="100" cy="100" r="90" fill="#84BD00" />
+  <!-- Círculo interno (anel preto) -->
+  <circle cx="100" cy="100" r="70" fill="#111111" />
+  <!-- Círculo interno verde -->
+  <circle cx="100" cy="100" r="50" fill="#84BD00" />
+  <!-- Letra P estilizada -->
+  <path d="M85 70H115C125 70 135 80 135 90C135 100 125 110 115 110H95V130H85V70ZM95 100H115C120 100 125 95 125 90C125 85 120 80 115 80H95V100Z" fill="#FFFFFF"/>
+</svg>

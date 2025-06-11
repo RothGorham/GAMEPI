@@ -22,11 +22,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { perguntasService } from "@/lib/api";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Question {
   _id: string;
   pergunta: string;
   correta: string;
+  nivel?: string;
+  materia?: string;
 }
 
 const Materias = () => {
@@ -36,7 +45,12 @@ const Materias = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [newQuestion, setNewQuestion] = useState({ pergunta: "", correta: "" });
+  const [newQuestion, setNewQuestion] = useState({ 
+    pergunta: "", 
+    correta: "",
+    nivel: "medio",
+    materia: "misto"
+  });
   
   // Carregar perguntas do backend
   useEffect(() => {
@@ -67,12 +81,14 @@ const Materias = () => {
       const pergunta = {
         pergunta: newQuestion.pergunta.trim(),
         correta: newQuestion.correta.trim(),
+        nivel: newQuestion.nivel,
+        materia: newQuestion.materia
       };
 
       console.log("Enviando pergunta para o servidor:", pergunta);
       const novaPergunta = await perguntasService.adicionarPergunta(pergunta);
       setQuestions([...questions, novaPergunta]);
-      setNewQuestion({ pergunta: "", correta: "" });
+      setNewQuestion({ pergunta: "", correta: "", nivel: "medio", materia: "misto" });
       setIsDialogOpen(false);
       toast.success("Pergunta adicionada com sucesso!");
     } catch (error) {
@@ -159,8 +175,10 @@ const Materias = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[60%]">Pergunta</TableHead>
-                    <TableHead className="w-[30%]">Resposta</TableHead>
+                    <TableHead className="w-[40%]">Pergunta</TableHead>
+                    <TableHead className="w-[25%]">Resposta</TableHead>
+                    <TableHead className="w-[10%]">Dificuldade</TableHead>
+                    <TableHead className="w-[15%]">Matéria</TableHead>
                     <TableHead className="w-[10%]">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -169,6 +187,15 @@ const Materias = () => {
                     <TableRow key={q._id}>
                       <TableCell className="font-medium">{q.pergunta}</TableCell>
                       <TableCell>{q.correta}</TableCell>
+                      <TableCell>
+                        {q.nivel === 'facil' ? 'Fácil' : 
+                         q.nivel === 'medio' ? 'Médio' : 
+                         q.nivel === 'dificil' ? 'Difícil' : 'Médio'}
+                      </TableCell>
+                      <TableCell>
+                        {q.materia === 'matematica' ? 'Matemática' : 
+                         q.materia === 'misto' ? 'Misto' : 'Misto'}
+                      </TableCell>
                       <TableCell>
                         <Button
                           variant="destructive"
@@ -217,6 +244,41 @@ const Materias = () => {
                   setNewQuestion({ ...newQuestion, correta: e.target.value })
                 }
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="nivel">Dificuldade</Label>
+              <Select
+                value={newQuestion.nivel}
+                onValueChange={(value) =>
+                  setNewQuestion({ ...newQuestion, nivel: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a dificuldade" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="facil">Fácil</SelectItem>
+                  <SelectItem value="medio">Médio</SelectItem>
+                  <SelectItem value="dificil">Difícil</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="materia">Matéria</Label>
+              <Select
+                value={newQuestion.materia}
+                onValueChange={(value) =>
+                  setNewQuestion({ ...newQuestion, materia: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a matéria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="matematica">Matemática</SelectItem>
+                  <SelectItem value="misto">Misto</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>

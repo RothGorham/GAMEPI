@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Trophy, BookOpen, Users, Award, Download, GamepadIcon } from "lucide-react";
+import { Sparkles, BookOpen, Users, Award, Download, GamepadIcon } from "lucide-react";
 
 const PaginaIntro = () => {
   const navigate = useNavigate();
@@ -22,7 +22,11 @@ const PaginaIntro = () => {
                 transition={{ duration: 0.5 }}
                 className="mr-3"
               >
-                <img src="/lightning-icon.svg" alt="Lightning Icon" className="w-6 h-6" />
+                <img 
+                  src="https://poliedro-api.p4ed.com/sso/auth/resources/vv3tb/login/updated-poliedro/dist/static/media/logo-sistema-p+.eb1179607d4dc652db31b1f92b5df4b5.svg" 
+                  alt="Logo Poliedro" 
+                  className="w-8 h-8" 
+                />
               </motion.div>
               <motion.h1 
                 initial={{ opacity: 0, y: -20 }}
@@ -36,18 +40,22 @@ const PaginaIntro = () => {
             </div>
             <Button 
               onClick={() => navigate("/login")}
-              className="bg-monster-green hover:bg-monster-green/90 text-white font-bold py-2 px-4 rounded-sm group"
+              className="bg-monster-green hover:bg-monster-green/90 text-white font-bold py-2 px-4 rounded transition-all duration-300 shadow-lg hover:shadow-monster-green/30"
             >
               <span className="tracking-wider text-xs sm:text-sm">ÁREA DO PROFESSOR</span>
-              <Trophy className="ml-2 w-4 h-4 group-hover:rotate-12 transition-transform" />
+              <img 
+                src="https://poliedro-api.p4ed.com/sso/auth/resources/vv3tb/login/updated-poliedro/dist/static/media/logo-sistema-p+.eb1179607d4dc652db31b1f92b5df4b5.svg" 
+                alt="Logo Poliedro" 
+                className="ml-2 w-4 h-4" 
+              />
             </Button>
           </div>
         </header>
 
         <main className="flex-1 flex flex-col items-center justify-center">
           {/* Hero Section */}
-          <div className="flex flex-col md:flex-row items-center justify-center px-4 py-12 relative z-10 container mx-auto">
-            <div className="md:w-1/2 text-center md:text-left mb-10 md:mb-0 md:pr-8">
+          <div className="flex flex-col md:flex-row items-center justify-center px-4 py-8 md:py-12 relative z-10 container mx-auto gap-8 md:gap-0">
+            <div className="w-full md:w-1/2 text-center md:text-left mb-6 md:mb-0 md:pr-8">
               <motion.h2 
                 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-shadow tracking-wider"
                 initial={{ opacity: 0, y: -20 }}
@@ -78,12 +86,12 @@ const PaginaIntro = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
-                <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <Button className="game-button-primary rounded-sm text-sm tracking-wider" onClick={() => window.open("#")}>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start w-full sm:w-auto">
+                  <Button className="game-button-primary rounded transition-all duration-300 shadow-lg hover:shadow-monster-green/30 hover:scale-105 text-sm tracking-wider" onClick={() => window.open("#")}>
                     <span>BAIXAR VERSÃO WEB</span>
                     <Download className="ml-2 w-4 h-4 group-hover:scale-125 transition-transform" />
                   </Button>
-                  <Button className="bg-transparent border border-monster-green text-white font-bold py-3 px-6 rounded-sm text-sm tracking-wider group" onClick={() => window.open("#")}>
+                  <Button className="bg-transparent border border-monster-green text-white font-bold py-3 px-6 rounded transition-all duration-300 shadow-lg hover:shadow-monster-green/20 hover:scale-105 text-sm tracking-wider group" onClick={() => window.open("#")}>
                     <span>JOGAR NO ROBLOX</span>
                     <GamepadIcon className="ml-2 w-4 h-4 group-hover:scale-125 transition-transform" />
                   </Button>
@@ -97,11 +105,15 @@ const PaginaIntro = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <div className="relative w-80 h-80 sm:w-96 sm:h-96 bg-monster-darkgray/30 rounded-lg border border-monster-green/30 flex items-center justify-center overflow-hidden mx-auto">
+              <div className="relative w-full max-w-[320px] h-[320px] sm:w-[384px] sm:h-[384px] bg-monster-darkgray/30 rounded-lg border border-monster-green/30 flex items-center justify-center overflow-hidden mx-auto shadow-xl hover:shadow-monster-green/20 transition-all duration-500">
                 <div className="absolute inset-0 bg-monster-green/5 rounded-lg blur-xl"></div>
                 <div className="absolute inset-0 z-0 opacity-30" style={{ backgroundImage: 'url("/grid-pattern.svg")', backgroundSize: '50px 50px' }}></div>
                 <div className="relative z-10 text-center p-6">
-                  <img src="https://www.sistemapoliedro.com.br/app/themes/se-theme/resources/assets/img/logo-poliedro-se.svg?1.12.1" alt="Logo Poliedro" className="w-48 h-48 mx-auto animate-float" />
+                  <img 
+                    src="https://poliedro-api.p4ed.com/sso/auth/resources/vv3tb/login/updated-poliedro/dist/static/media/logo-sistema-p+.eb1179607d4dc652db31b1f92b5df4b5.svg" 
+                    alt="Logo Poliedro" 
+                    className="w-48 h-48 mx-auto animate-pulse" 
+                  />
                 </div>
               </div>
             </motion.div>
@@ -121,7 +133,7 @@ const PaginaIntro = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {/* Card 1 */}
               <motion.div 
-                className="glass-effect p-8 rounded-none flex flex-col items-center text-center hover-glow transition-all duration-300 hover:translate-y-[-5px]"
+                className="glass-effect p-8 rounded-lg flex flex-col items-center text-center transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-monster-green/20 hover:scale-105 border-l-4 border-l-monster-green"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
@@ -135,7 +147,7 @@ const PaginaIntro = () => {
               
               {/* Card 2 */}
               <motion.div 
-                className="glass-effect p-8 rounded-none flex flex-col items-center text-center hover-glow transition-all duration-300 hover:translate-y-[-5px]"
+                className="glass-effect p-8 rounded-lg flex flex-col items-center text-center transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-monster-green/20 hover:scale-105 border-l-4 border-l-monster-green"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
@@ -149,7 +161,7 @@ const PaginaIntro = () => {
               
               {/* Card 3 */}
               <motion.div 
-                className="glass-effect p-8 rounded-none flex flex-col items-center text-center hover-glow transition-all duration-300 hover:translate-y-[-5px]"
+                className="glass-effect p-8 rounded-lg flex flex-col items-center text-center transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-monster-green/20 hover:scale-105 border-l-4 border-l-monster-green"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
@@ -159,6 +171,9 @@ const PaginaIntro = () => {
                 </div>
                 <h4 className="text-xl font-bold text-monster-green mb-3 tracking-wider">RANKING COMPETITIVO</h4>
                 <p className="text-muted-foreground text-sm">Acompanhe seu progresso e compare seu desempenho com outros jogadores.</p>
+                <div className="mt-3 pt-2 border-t border-monster-green/20">
+                  <p className="text-muted-foreground/80 text-xs italic">Para acessar o ranking, converse diretamente com seu professor em sala. As informações estarão disponíveis apenas com ele.</p>
+                </div>
               </motion.div>
             </div>
           </div>

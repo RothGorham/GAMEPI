@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-// Schema para perguntas
-const perguntaSchema = new mongoose.Schema({
+// Schema para perguntas do modo web
+const perguntaWebSchema = new mongoose.Schema({
   pergunta: {
     type: String,
     required: true
@@ -13,20 +13,18 @@ const perguntaSchema = new mongoose.Schema({
   nivel: {
     type: String,
     enum: ['facil', 'medio', 'dificil'],
-    default: 'medio'
+    required: true
   },
-  materia: {
-    type: String,
-    enum: ['matematica', 'misto'],
-    default: 'misto'
+  aceita: {
+    type: Boolean,
+    default: false
   },
-  modo: {
-    type: String,
-    enum: ['normal', 'web'],
-    default: 'normal'
+  dataCriacao: {
+    type: Date,
+    default: Date.now
   }
 });
 
 // Exportamos apenas o schema, sem criar o modelo
 // A conexão específica será feita na rota
-module.exports = perguntaSchema;
+module.exports = perguntaWebSchema;
