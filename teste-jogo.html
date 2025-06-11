@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Acesso ao Jogo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .method {
+            background-color: #f5f5f5;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste de Acesso ao Jogo</h1>
+    <p>Esta página contém diferentes métodos para tentar abrir o jogo. Clique nos botões abaixo para testar cada método.</p>
+    
+    <div class="method">
+        <h2>Método 1: window.open com caminho absoluto</h2>
+        <button onclick="testarMetodo1()">Abrir Jogo (Método 1)</button>
+        <div id="resultado1"></div>
+    </div>
+
+    <div class="method">
+        <h2>Método 2: window.open com caminho relativo</h2>
+        <button onclick="testarMetodo2()">Abrir Jogo (Método 2)</button>
+        <div id="resultado2"></div>
+    </div>
+
+    <div class="method">
+        <h2>Método 3: Link direto</h2>
+        <p>Clique no link abaixo para tentar abrir o jogo diretamente:</p>
+        <a href="file:///c:/Users/COCA/Desktop/SITEPIBACKEND-main/GAME PROJETO 12_10/index.html" target="_blank">Abrir Jogo (Link Direto)</a>
+        <div id="resultado3"></div>
+    </div>
+
+    <div class="method">
+        <h2>Método 4: iframe</h2>
+        <button onclick="testarMetodo4()">Carregar Jogo em iframe</button>
+        <div id="iframe-container" style="margin-top: 10px;"></div>
+        <div id="resultado4"></div>
+    </div>
+
+    <script>
+        function testarMetodo1() {
+            try {
+                const gameUrl = "file:///c:/Users/COCA/Desktop/SITEPIBACKEND-main/GAME PROJETO 12_10/index.html";
+                console.log("Tentando abrir o jogo em:", gameUrl);
+                const newWindow = window.open(gameUrl, "_blank");
+                
+                if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                    document.getElementById("resultado1").innerHTML = 
+                        "<p class='error'>O navegador bloqueou a abertura do jogo. Isso geralmente acontece devido a restrições de segurança do navegador para acessar arquivos locais.</p>" +
+                        "<p>Sugestão: Verifique as configurações do seu navegador para permitir o acesso a arquivos locais ou use um servidor local para hospedar o jogo.</p>";
+                } else {
+                    document.getElementById("resultado1").innerHTML = 
+                        "<p class='success'>Janela aberta com sucesso! Se o jogo não aparecer, verifique se o caminho está correto.</p>";
+                }
+            } catch (error) {
+                console.error("Erro ao abrir o jogo:", error);
+                document.getElementById("resultado1").innerHTML = 
+                    "<p class='error'>Erro ao tentar abrir o jogo: " + error + "</p>";
+            }
+        }
+
+        function testarMetodo2() {
+            try {
+                // Usando caminho relativo
+                const gameUrl = "./GAME PROJETO 12_10/index.html";
+                console.log("Tentando abrir o jogo em (caminho relativo):", gameUrl);
+                const newWindow = window.open(gameUrl, "_blank");
+                
+                if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                    document.getElementById("resultado2").innerHTML = 
+                        "<p class='error'>O navegador bloqueou a abertura do jogo com caminho relativo.</p>";
+                } else {
+                    document.getElementById("resultado2").innerHTML = 
+                        "<p class='success'>Janela aberta com sucesso usando caminho relativo!</p>";
+                }
+            } catch (error) {
+                console.error("Erro ao abrir o jogo (caminho relativo):", error);
+                document.getElementById("resultado2").innerHTML = 
+                    "<p class='error'>Erro ao tentar abrir o jogo com caminho relativo: " + error + "</p>";
+            }
+        }
+
+        function testarMetodo4() {
+            try {
+                const container = document.getElementById("iframe-container");
+                container.innerHTML = "";
+                
+                const iframe = document.createElement("iframe");
+                iframe.src = "file:///c:/Users/COCA/Desktop/SITEPIBACKEND-main/GAME PROJETO 12_10/index.html";
+                iframe.width = "100%";
+                iframe.height = "400px";
+                iframe.style.border = "1px solid #ccc";
+                
+                container.appendChild(iframe);
+                
+                document.getElementById("resultado4").innerHTML = 
+                    "<p>Tentativa de carregar o jogo em um iframe. Se você não vê o jogo abaixo, provavelmente o navegador está bloqueando o acesso por motivos de segurança.</p>";
+                
+                // Verificar se o iframe carregou corretamente
+                iframe.onload = function() {
+                    try {
+                        // Tentar acessar o conteúdo do iframe
+                        const iframeContent = iframe.contentWindow || iframe.contentDocument;
+                        if (iframeContent.document) {
+                            document.getElementById("resultado4").innerHTML = 
+                                "<p class='success'>O iframe carregou com sucesso!</p>";
+                        }
+                    } catch (e) {
+                        document.getElementById("resultado4").innerHTML += 
+                            "<p class='error'>Erro ao acessar o conteúdo do iframe: " + e + "</p>" +
+                            "<p>Isso geralmente acontece devido a restrições de segurança do navegador.</p>";
+                    }
+                };
+                
+                iframe.onerror = function() {
+                    document.getElementById("resultado4").innerHTML += 
+                        "<p class='error'>Erro ao carregar o iframe.</p>";
+                };
+            } catch (error) {
+                console.error("Erro ao criar iframe:", error);
+                document.getElementById("resultado4").innerHTML = 
+                    "<p class='error'>Erro ao tentar criar iframe: " + error + "</p>";
+            }
+        }
+    </script>
+</body>
+</html>

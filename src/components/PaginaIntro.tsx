@@ -87,10 +87,19 @@ const PaginaIntro = () => {
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start w-full sm:w-auto">
-                  <Button className="game-button-primary rounded transition-all duration-300 shadow-lg hover:shadow-monster-green/30 hover:scale-105 text-sm tracking-wider" onClick={() => window.open("#")}>
-                    <span>BAIXAR VERSÃO WEB</span>
-                    <Download className="ml-2 w-4 h-4 group-hover:scale-125 transition-transform" />
-                  </Button>
+                  <a 
+                    href="http://localhost:8081"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block"
+                  >
+                    <Button 
+                      className="game-button-primary rounded transition-all duration-300 shadow-lg hover:shadow-monster-green/30 hover:scale-105 text-sm tracking-wider"
+                    >
+                      <span>BAIXAR VERSÃO WEB</span>
+                      <Download className="ml-2 w-4 h-4 group-hover:scale-125 transition-transform" />
+                    </Button>
+                  </a>
                   <Button className="bg-transparent border border-monster-green text-white font-bold py-3 px-6 rounded transition-all duration-300 shadow-lg hover:shadow-monster-green/20 hover:scale-105 text-sm tracking-wider group" onClick={() => window.open("#")}>
                     <span>JOGAR NO ROBLOX</span>
                     <GamepadIcon className="ml-2 w-4 h-4 group-hover:scale-125 transition-transform" />
